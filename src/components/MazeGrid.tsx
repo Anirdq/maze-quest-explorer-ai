@@ -29,12 +29,17 @@ const MazeGrid: React.FC<MazeGridProps> = ({ mazeData }) => {
             >
               {cell.isStart && (
                 <div className="flex h-full w-full items-center justify-center">
-                  <div className="h-2 w-2 rounded-full bg-white animate-pulse"></div>
+                  <div className="h-3 w-3 rounded-full bg-blue-500 animate-pulse"></div>
                 </div>
               )}
               {cell.isEnd && (
                 <div className="flex h-full w-full items-center justify-center">
-                  <div className="h-2 w-2 rounded-full bg-white"></div>
+                  <div className="h-3 w-3 rounded-full bg-green-500"></div>
+                </div>
+              )}
+              {cell.type === CellType.VISITING && !cell.isStart && !cell.isEnd && (
+                <div className="flex h-full w-full items-center justify-center">
+                  <div className="h-2 w-2 rounded-full bg-purple-400 animate-pulse"></div>
                 </div>
               )}
             </div>
