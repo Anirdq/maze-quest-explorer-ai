@@ -69,18 +69,20 @@ const MazeExplorer: React.FC = () => {
     
     if (!algorithmRef.current) {
       // Initialize algorithm
+      const clonedMaze = cloneMazeData(mazeData);
+      
       switch (algorithm) {
         case "bfs":
-          algorithmRef.current = bfs(cloneMazeData(mazeData));
+          algorithmRef.current = bfs(clonedMaze);
           break;
         case "dfs":
-          algorithmRef.current = dfs(cloneMazeData(mazeData));
+          algorithmRef.current = dfs(clonedMaze);
           break;
         case "astar":
-          algorithmRef.current = astar(cloneMazeData(mazeData));
+          algorithmRef.current = astar(clonedMaze);
           break;
         case "dijkstra":
-          algorithmRef.current = dijkstra(cloneMazeData(mazeData));
+          algorithmRef.current = dijkstra(clonedMaze);
           break;
       }
     }
@@ -113,6 +115,8 @@ const MazeExplorer: React.FC = () => {
     setAlgorithm(newAlgorithm);
     if (isRunning) {
       handleReset();
+    } else if (isDone) {
+      handleReset();
     }
   };
 
@@ -132,43 +136,53 @@ const MazeExplorer: React.FC = () => {
     const step = () => {
       if (!algorithmRef.current || !isRunning) return;
       
-      const result = algorithmRef.current.next();
-      
-      if (result) {
-        setMazeData({ 
-          ...mazeData, 
-          grid: result.grid 
-        });
+      try {
+        const result = algorithmRef.current.next();
         
-        setStats({
-          visitedCount: result.visitedCount,
-          pathLength: result.pathLength,
-          elapsedTime: result.elapsedTime,
-        });
-        
-        if (result.isDone) {
-          setIsDone(true);
-          setIsRunning(false);
+        if (result) {
+          setMazeData({ 
+            ...mazeData, 
+            grid: result.grid 
+          });
           
-          if (result.success) {
-            toast({
-              title: "Path Found!",
-              description: `Found path in ${result.elapsedTime}ms with ${result.pathLength} steps`,
-            });
-          } else {
-            toast({
-              title: "No Path Found",
-              description: "The maze has no valid solution",
-              variant: "destructive",
-            });
+          setStats({
+            visitedCount: result.visitedCount,
+            pathLength: result.pathLength,
+            elapsedTime: result.elapsedTime,
+          });
+          
+          if (result.isDone) {
+            setIsDone(true);
+            setIsRunning(false);
+            
+            if (result.success) {
+              toast({
+                title: "Path Found!",
+                description: `Found path in ${result.elapsedTime}ms with ${result.pathLength} steps`,
+              });
+            } else {
+              toast({
+                title: "No Path Found",
+                description: "The maze has no valid solution",
+                variant: "destructive",
+              });
+            }
+            
+            return;
           }
           
-          return;
+          setTimeout(() => {
+            animationRef.current = requestAnimationFrame(step);
+          }, delayMs);
         }
-        
-        setTimeout(() => {
-          animationRef.current = requestAnimationFrame(step);
-        }, delayMs);
+      } catch (error) {
+        console.error("Error in animation step:", error);
+        setIsRunning(false);
+        toast({
+          title: "Error",
+          description: "An error occurred during pathfinding",
+          variant: "destructive",
+        });
       }
     };
     

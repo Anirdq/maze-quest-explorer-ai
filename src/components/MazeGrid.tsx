@@ -51,6 +51,11 @@ const MazeGrid: React.FC<MazeGridProps> = ({ mazeData }) => {
                   <div className="h-2 w-2 rounded-full bg-purple-400 animate-pulse"></div>
                 </div>
               )}
+              {cell.type === CellType.SOLUTION && !cell.isStart && !cell.isEnd && (
+                <div className="flex h-full w-full items-center justify-center">
+                  <div className="h-2 w-2 rounded-full bg-yellow-500"></div>
+                </div>
+              )}
             </div>
           ))
         )}
