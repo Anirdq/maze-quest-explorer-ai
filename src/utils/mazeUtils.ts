@@ -154,6 +154,74 @@ export const generateMaze = (width: number, height: number): MazeData => {
   return mazeData;
 };
 
+// Check if a path exists between start and end positions
+export const ensurePathExists = (mazeData: MazeData): MazeData => {
+  const { grid, startPosition, endPosition } = mazeData;
+  const queue: Position[] = [startPosition];
+  const visited: boolean[][] = Array(grid.length).fill(0).map(() => Array(grid[0].length).fill(false));
+  visited[startPosition.row][startPosition.col] = true;
+  
+  // Simple BFS to check if end is reachable
+  while (queue.length > 0) {
+    const current = queue.shift()!;
+    const { row, col } = current;
+    
+    if (row === endPosition.row && col === endPosition.col) {
+      // Path exists, return maze as is
+      return mazeData;
+    }
+    
+    const directions = [
+      { row: row - 1, col }, // Up
+      { row, col: col + 1 }, // Right
+      { row: row + 1, col }, // Down
+      { row, col: col - 1 }, // Left
+    ];
+    
+    for (const dir of directions) {
+      if (
+        isValidPosition(grid, dir) && 
+        !visited[dir.row][dir.col]
+      ) {
+        visited[dir.row][dir.col] = true;
+        queue.push(dir);
+      }
+    }
+  }
+  
+  // If we get here, no path exists, so create one
+  return createPathToEnd(mazeData);
+};
+
+// Create a direct path from start to end if none exists
+const createPathToEnd = (mazeData: MazeData): MazeData => {
+  const { grid, startPosition, endPosition } = cloneMazeData(mazeData);
+  let current: Position = { ...startPosition };
+  
+  // Create a zigzag path from start to end
+  while (current.row !== endPosition.row || current.col !== endPosition.col) {
+    // Move horizontally first
+    if (current.col < endPosition.col) {
+      current.col++;
+    } else if (current.col > endPosition.col) {
+      current.col--;
+    }
+    // Then move vertically
+    else if (current.row < endPosition.row) {
+      current.row++;
+    } else if (current.row > endPosition.row) {
+      current.row--;
+    }
+    
+    // Carve the path
+    if (!grid[current.row][current.col].isStart && !grid[current.row][current.col].isEnd) {
+      grid[current.row][current.col].type = CellType.PATH;
+    }
+  }
+  
+  return { ...mazeData, grid };
+};
+
 // Calculate the Manhattan distance between two positions
 export const manhattanDistance = (pos1: Position, pos2: Position): number => {
   return Math.abs(pos1.row - pos2.row) + Math.abs(pos1.col - pos2.col);

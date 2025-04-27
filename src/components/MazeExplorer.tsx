@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import MazeGrid from "./MazeGrid";
 import ControlPanel from "./ControlPanel";
-import { generateMaze, resetMazeVisitation, MazeData, cloneMazeData } from "@/utils/mazeUtils";
+import { generateMaze, resetMazeVisitation, MazeData, cloneMazeData, ensurePathExists } from "@/utils/mazeUtils";
 import { 
   Algorithm, 
   AlgorithmGenerator,
@@ -47,8 +46,12 @@ const MazeExplorer: React.FC = () => {
   }, []);
 
   const generateNewMaze = () => {
+    // Generate maze with guaranteed path from start to end
     const newMazeData = generateMaze(mazeSize, mazeSize);
-    setMazeData(newMazeData);
+    // Ensure there is a valid path from start to end
+    const validMaze = ensurePathExists(newMazeData);
+    
+    setMazeData(validMaze);
     setIsDone(false);
     setStats({
       visitedCount: 0,
@@ -58,7 +61,7 @@ const MazeExplorer: React.FC = () => {
     
     toast({
       title: "New Maze Generated",
-      description: `Created a ${mazeSize}×${mazeSize} maze`,
+      description: `Created a ${mazeSize}×${mazeSize} maze with guaranteed solution`,
     });
   };
 
@@ -164,9 +167,19 @@ const MazeExplorer: React.FC = () => {
             } else {
               toast({
                 title: "No Path Found",
-                description: "The maze has no valid solution",
+                description: "The algorithm couldn't find a path to the end",
                 variant: "destructive",
               });
+              // Try regenerating a valid maze
+              if (!isRunning) {
+                setTimeout(() => {
+                  toast({
+                    title: "Generating New Maze",
+                    description: "Creating a maze with a guaranteed path",
+                  });
+                  generateNewMaze();
+                }, 2000);
+              }
             }
             
             return;
