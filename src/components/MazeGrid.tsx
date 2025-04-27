@@ -32,7 +32,7 @@ const MazeGrid: React.FC<MazeGridProps> = ({ mazeData }) => {
                 ${cell.type === CellType.VISITED ? 'bg-blue-100' : ''}
                 ${cell.type === CellType.VISITING ? 'bg-purple-100' : ''}
                 ${cell.type === CellType.SOLUTION ? 'bg-yellow-200' : ''}
-                transition-colors duration-200
+                transition-colors duration-100
               `}
               title={`${rowIndex}, ${colIndex} - ${cell.type}`}
             >

@@ -1,4 +1,3 @@
-
 import { Cell, CellType, MazeData, Position, isValidPosition, manhattanDistance } from "./mazeUtils";
 
 export type Algorithm = "bfs" | "dfs" | "astar" | "dijkstra";
@@ -35,7 +34,14 @@ export const bfs = (mazeData: MazeData): AlgorithmGenerator => {
     next: () => {
       if (isDone || queue.length === 0) {
         isDone = true;
-        return null;
+        return {
+          grid: [...grid],
+          visitedCount: countVisited(),
+          pathLength: 0,
+          elapsedTime: Date.now() - startTime,
+          isDone,
+          success
+        };
       }
       
       const current = queue.shift()!;
@@ -43,6 +49,7 @@ export const bfs = (mazeData: MazeData): AlgorithmGenerator => {
       
       // Check if reached the end
       if (row === endPosition.row && col === endPosition.col) {
+        // We've found the end! Now reconstruct the path
         const path = reconstructPath();
         isDone = true;
         success = true;
@@ -110,17 +117,18 @@ export const bfs = (mazeData: MazeData): AlgorithmGenerator => {
   
   function reconstructPath(): Position[] {
     const path: Position[] = [];
-    let current: Position | undefined = endPosition;
+    let current: Position | undefined = {...endPosition};
     
     while (current) {
-      path.unshift(current);
-      const cell = grid[current.row][current.col];
-      current = cell.parent;
+      path.unshift({...current});
       
-      if (current && !grid[current.row][current.col].isStart && 
-          !grid[current.row][current.col].isEnd) {
+      // Update cell type to mark the solution path
+      if (!grid[current.row][current.col].isStart && !grid[current.row][current.col].isEnd) {
         grid[current.row][current.col].type = CellType.SOLUTION;
       }
+      
+      const cell = grid[current.row][current.col];
+      current = cell.parent ? {...cell.parent} : undefined;
     }
     
     return path;
@@ -144,7 +152,14 @@ export const dfs = (mazeData: MazeData): AlgorithmGenerator => {
     next: () => {
       if (isDone || stack.length === 0) {
         isDone = true;
-        return null;
+        return {
+          grid: [...grid],
+          visitedCount: countVisited(),
+          pathLength: 0,
+          elapsedTime: Date.now() - startTime,
+          isDone,
+          success
+        };
       }
       
       const current = stack.pop()!;
@@ -220,17 +235,18 @@ export const dfs = (mazeData: MazeData): AlgorithmGenerator => {
   
   function reconstructPath(): Position[] {
     const path: Position[] = [];
-    let current: Position | undefined = endPosition;
+    let current: Position | undefined = {...endPosition};
     
     while (current) {
-      path.unshift(current);
-      const cell = grid[current.row][current.col];
-      current = cell.parent;
+      path.unshift({...current});
       
-      if (current && !grid[current.row][current.col].isStart && 
-          !grid[current.row][current.col].isEnd) {
+      // Update cell type to mark the solution path
+      if (!grid[current.row][current.col].isStart && !grid[current.row][current.col].isEnd) {
         grid[current.row][current.col].type = CellType.SOLUTION;
       }
+      
+      const cell = grid[current.row][current.col];
+      current = cell.parent ? {...cell.parent} : undefined;
     }
     
     return path;
@@ -259,7 +275,14 @@ export const astar = (mazeData: MazeData): AlgorithmGenerator => {
     next: () => {
       if (isDone || openSet.length === 0) {
         isDone = true;
-        return null;
+        return {
+          grid: [...grid],
+          visitedCount: countVisited(),
+          pathLength: 0,
+          elapsedTime: Date.now() - startTime,
+          isDone,
+          success
+        };
       }
       
       // Find the node with the lowest f value
@@ -363,17 +386,18 @@ export const astar = (mazeData: MazeData): AlgorithmGenerator => {
   
   function reconstructPath(): Position[] {
     const path: Position[] = [];
-    let current: Position | undefined = endPosition;
+    let current: Position | undefined = {...endPosition};
     
     while (current) {
-      path.unshift(current);
-      const cell = grid[current.row][current.col];
-      current = cell.parent;
+      path.unshift({...current});
       
-      if (current && !grid[current.row][current.col].isStart && 
-          !grid[current.row][current.col].isEnd) {
+      // Update cell type to mark the solution path
+      if (!grid[current.row][current.col].isStart && !grid[current.row][current.col].isEnd) {
         grid[current.row][current.col].type = CellType.SOLUTION;
       }
+      
+      const cell = grid[current.row][current.col];
+      current = cell.parent ? {...cell.parent} : undefined;
     }
     
     return path;
@@ -405,7 +429,14 @@ export const dijkstra = (mazeData: MazeData): AlgorithmGenerator => {
     next: () => {
       if (isDone || queue.length === 0) {
         isDone = true;
-        return null;
+        return {
+          grid: [...grid],
+          visitedCount: countVisited(),
+          pathLength: 0,
+          elapsedTime: Date.now() - startTime,
+          isDone,
+          success
+        };
       }
       
       // Find node with minimum distance
@@ -500,17 +531,18 @@ export const dijkstra = (mazeData: MazeData): AlgorithmGenerator => {
   
   function reconstructPath(): Position[] {
     const path: Position[] = [];
-    let current: Position | undefined = endPosition;
+    let current: Position | undefined = {...endPosition};
     
     while (current) {
-      path.unshift(current);
-      const cell = grid[current.row][current.col];
-      current = cell.parent;
+      path.unshift({...current});
       
-      if (current && !grid[current.row][current.col].isStart && 
-          !grid[current.row][current.col].isEnd) {
+      // Update cell type to mark the solution path
+      if (!grid[current.row][current.col].isStart && !grid[current.row][current.col].isEnd) {
         grid[current.row][current.col].type = CellType.SOLUTION;
       }
+      
+      const cell = grid[current.row][current.col];
+      current = cell.parent ? {...cell.parent} : undefined;
     }
     
     return path;

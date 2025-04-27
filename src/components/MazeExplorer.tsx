@@ -140,10 +140,11 @@ const MazeExplorer: React.FC = () => {
         const result = algorithmRef.current.next();
         
         if (result) {
-          setMazeData({ 
-            ...mazeData, 
+          // Important: Properly update the maze data to include the solution path
+          setMazeData(prevMazeData => ({ 
+            ...prevMazeData, 
             grid: result.grid 
-          });
+          }));
           
           setStats({
             visitedCount: result.visitedCount,
