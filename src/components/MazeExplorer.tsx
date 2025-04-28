@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import MazeGrid from "./MazeGrid";
 import ControlPanel from "./ControlPanel";
@@ -8,7 +9,8 @@ import {
   cloneMazeData, 
   ensurePathExists,
   generateMultipleSolutions,
-  Position 
+  Position,
+  CellType
 } from "@/utils/mazeUtils";
 import { 
   Algorithm, 
@@ -89,8 +91,8 @@ const MazeExplorer: React.FC = () => {
       // Reset previous solution
       for (let row = 0; row < updatedMaze.grid.length; row++) {
         for (let col = 0; col < updatedMaze.grid[0].length; col++) {
-          if (updatedMaze.grid[row][col].type === "solution") {
-            updatedMaze.grid[row][col].type = "path";
+          if (updatedMaze.grid[row][col].type === CellType.SOLUTION) {
+            updatedMaze.grid[row][col].type = CellType.PATH;
           }
         }
       }
@@ -99,7 +101,7 @@ const MazeExplorer: React.FC = () => {
       solutions[nextSolution].forEach(pos => {
         if (!updatedMaze.grid[pos.row][pos.col].isStart && 
             !updatedMaze.grid[pos.row][pos.col].isEnd) {
-          updatedMaze.grid[pos.row][pos.col].type = "solution";
+          updatedMaze.grid[pos.row][pos.col].type = CellType.SOLUTION;
         }
       });
       
