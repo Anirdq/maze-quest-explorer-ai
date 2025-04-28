@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Algorithm } from "@/utils/pathfindingAlgorithms";
@@ -25,6 +24,9 @@ interface ControlPanelProps {
   onPause: () => void;
   onReset: () => void;
   onGenerateNewMaze: () => void;
+  onCycleSolutions: () => void;
+  solutionsCount: number;
+  currentSolution: number;
 }
 
 const ControlPanel: React.FC<ControlPanelProps> = ({
@@ -41,6 +43,9 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   onPause,
   onReset,
   onGenerateNewMaze,
+  onCycleSolutions,
+  solutionsCount,
+  currentSolution,
 }) => {
   return (
     <div className="control-panel">
@@ -120,6 +125,16 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
             <RefreshCw className="h-4 w-4" />
             Reset
           </Button>
+
+          {solutionsCount > 0 && (
+            <Button
+              variant="secondary"
+              onClick={onCycleSolutions}
+              className="col-span-2 flex items-center justify-center gap-2"
+            >
+              Next Solution ({currentSolution + 1}/{solutionsCount})
+            </Button>
+          )}
 
           <Button
             variant="secondary"
