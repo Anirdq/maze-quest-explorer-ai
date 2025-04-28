@@ -300,13 +300,33 @@ export const astar = (mazeData: MazeData): AlgorithmGenerator => {
       
       // Check if reached the end
       if (row === endPosition.row && col === endPosition.col) {
-        const path = reconstructPath();
+        const paths = findMultiplePaths(grid, startPosition, endPosition);
+        
+        // Mark shortest path as solution
+        const shortestPath = paths[0];
+        for (const pos of shortestPath) {
+          if (!grid[pos.row][pos.col].isStart && !grid[pos.row][pos.col].isEnd) {
+            grid[pos.row][pos.col].type = CellType.SOLUTION;
+          }
+        }
+        
+        // Mark alternate paths
+        if (paths.length > 1) {
+          const alternatePath = paths[1];
+          for (const pos of alternatePath) {
+            if (!grid[pos.row][pos.col].isStart && !grid[pos.row][pos.col].isEnd &&
+                grid[pos.row][pos.col].type !== CellType.SOLUTION) {
+              grid[pos.row][pos.col].type = CellType.ALTERNATE_PATH;
+            }
+          }
+        }
+        
         isDone = true;
         success = true;
         return {
-          grid: [...grid], // Clone grid
+          grid: [...grid],
           visitedCount: countVisited(),
-          pathLength: path.length,
+          pathLength: shortestPath.length,
           elapsedTime: Date.now() - startTime,
           isDone,
           success

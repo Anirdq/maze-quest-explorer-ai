@@ -1,4 +1,3 @@
-
 // Cell types for the maze
 export enum CellType {
   WALL = 'wall',
@@ -8,6 +7,7 @@ export enum CellType {
   VISITED = 'visited',
   VISITING = 'visiting',
   SOLUTION = 'solution',
+  ALTERNATE_PATH = 'alternate-path',  // Add new type for alternate paths
 }
 
 // Position interface
@@ -330,4 +330,41 @@ export const reconstructPath = (grid: Cell[][], end: Position): Position[] => {
   }
   
   return path;
+};
+
+// Update reconstructPath to find multiple paths
+export const findMultiplePaths = (grid: Cell[][], start: Position, end: Position, maxPaths: number = 2): Position[][] => {
+  const paths: Position[][] = [];
+  const visited = new Set<string>();
+  
+  const dfs = (current: Position, path: Position[]) => {
+    if (paths.length >= maxPaths) return;
+    
+    const key = `${current.row},${current.col}`;
+    if (visited.has(key)) return;
+    visited.add(key);
+    
+    path.push({...current});
+    
+    if (current.row === end.row && current.col === end.col) {
+      paths.push([...path]);
+      return;
+    }
+    
+    const directions = [
+      { row: current.row - 1, col: current.col }, // Up
+      { row: current.row, col: current.col + 1 }, // Right
+      { row: current.row + 1, col: current.col }, // Down
+      { row: current.row, col: current.col - 1 }, // Left
+    ];
+    
+    for (const next of directions) {
+      if (isValidPosition(grid, next) && !visited.has(`${next.row},${next.col}`)) {
+        dfs(next, [...path]);
+      }
+    }
+  };
+  
+  dfs(start, []);
+  return paths.sort((a, b) => a.length - b.length); // Sort by path length
 };
