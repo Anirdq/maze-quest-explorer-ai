@@ -1,3 +1,4 @@
+
 // Cell types for the maze
 export enum CellType {
   WALL = 'wall',
@@ -304,84 +305,4 @@ export const reconstructPath = (grid: Cell[][], end: Position): Position[] => {
   }
   
   return path;
-};
-
-// Modified to support multiple solutions
-export const generateMultipleSolutions = (mazeData: MazeData, count: number = 3): Position[][] => {
-  const solutions: Position[][] = [];
-  const { grid, startPosition, endPosition } = mazeData;
-  
-  // Helper function to get valid neighbors in random order
-  const getRandomNeighbors = (pos: Position): Position[] => {
-    const { row, col } = pos;
-    const neighbors = [
-      { row: row - 1, col }, // Up
-      { row: row + 1, col }, // Down
-      { row, col: col - 1 }, // Left
-      { row, col: col + 1 }, // Right
-    ].filter(dir => isValidPosition(grid, dir));
-    
-    // Shuffle neighbors
-    return neighbors.sort(() => Math.random() - 0.5);
-  };
-  
-  // DFS to find a random path
-  const findRandomPath = (visited: Set<string>): Position[] | null => {
-    const stack: Position[] = [startPosition];
-    const parentMap = new Map<string, Position>();
-    
-    while (stack.length > 0) {
-      const current = stack.pop()!;
-      const key = `${current.row},${current.col}`;
-      
-      if (current.row === endPosition.row && current.col === endPosition.col) {
-        // Reconstruct path
-        const path: Position[] = [];
-        let curr: Position | undefined = current;
-        while (curr) {
-          path.unshift(curr);
-          const parentKey = `${curr.row},${curr.col}`;
-          curr = parentMap.get(parentKey);
-        }
-        return path;
-      }
-      
-      const neighbors = getRandomNeighbors(current);
-      for (const next of neighbors) {
-        const nextKey = `${next.row},${next.col}`;
-        if (!visited.has(nextKey)) {
-          visited.add(nextKey);
-          parentMap.set(nextKey, current);
-          stack.push(next);
-        }
-      }
-    }
-    
-    return null;
-  };
-  
-  // Try to find multiple unique solutions
-  for (let i = 0; i < count * 2; i++) { // Try more times than needed to ensure diversity
-    if (solutions.length >= count) break;
-    
-    const visited = new Set<string>();
-    const path = findRandomPath(visited);
-    
-    if (path) {
-      // Check if this path is significantly different from existing solutions
-      const isUnique = solutions.every(existingSolution => {
-        const commonCells = path.filter(pos => 
-          existingSolution.some(ePos => ePos.row === pos.row && ePos.col === pos.col)
-        ).length;
-        const similarity = commonCells / path.length;
-        return similarity < 0.7; // Consider paths unique if they share less than 70% cells
-      });
-      
-      if (isUnique || solutions.length === 0) {
-        solutions.push(path);
-      }
-    }
-  }
-  
-  return solutions;
 };

@@ -1,17 +1,7 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import MazeGrid from "./MazeGrid";
 import ControlPanel from "./ControlPanel";
-import { 
-  generateMaze, 
-  resetMazeVisitation, 
-  MazeData, 
-  cloneMazeData, 
-  ensurePathExists,
-  generateMultipleSolutions,
-  Position,
-  CellType
-} from "@/utils/mazeUtils";
+import { generateMaze, resetMazeVisitation, MazeData, cloneMazeData, ensurePathExists } from "@/utils/mazeUtils";
 import { 
   Algorithm, 
   AlgorithmGenerator,
@@ -38,8 +28,6 @@ const MazeExplorer: React.FC = () => {
   const algorithmRef = useRef<AlgorithmGenerator | null>(null);
   const animationRef = useRef<number | null>(null);
   const { toast } = useToast();
-  const [solutions, setSolutions] = useState<Position[][]>([]);
-  const [currentSolution, setCurrentSolution] = useState<number>(0);
 
   // Generate a new maze when maze size changes
   useEffect(() => {
@@ -57,65 +45,24 @@ const MazeExplorer: React.FC = () => {
     };
   }, []);
 
-  // Modified generateNewMaze to include multiple solutions
   const generateNewMaze = () => {
+    // Generate maze with guaranteed path from start to end
     const newMazeData = generateMaze(mazeSize, mazeSize);
+    // Ensure there is a valid path from start to end
     const validMaze = ensurePathExists(newMazeData);
-    const multipleSolutions = generateMultipleSolutions(validMaze, 3);
     
     setMazeData(validMaze);
-    setSolutions(multipleSolutions);
-    setCurrentSolution(0);
     setIsDone(false);
     setStats({
       visitedCount: 0,
-      pathLength: multipleSolutions[0]?.length || 0,
+      pathLength: 0,
       elapsedTime: 0,
     });
     
     toast({
       title: "New Maze Generated",
-      description: `Created a ${mazeSize}×${mazeSize} maze with ${multipleSolutions.length} different solutions`,
+      description: `Created a ${mazeSize}×${mazeSize} maze with guaranteed solution`,
     });
-  };
-
-  // Add method to cycle through solutions
-  const cycleSolutions = () => {
-    if (solutions.length > 0) {
-      const nextSolution = (currentSolution + 1) % solutions.length;
-      setCurrentSolution(nextSolution);
-      
-      // Update maze to show new solution
-      const updatedMaze = cloneMazeData(mazeData);
-      
-      // Reset previous solution
-      for (let row = 0; row < updatedMaze.grid.length; row++) {
-        for (let col = 0; col < updatedMaze.grid[0].length; col++) {
-          if (updatedMaze.grid[row][col].type === CellType.SOLUTION) {
-            updatedMaze.grid[row][col].type = CellType.PATH;
-          }
-        }
-      }
-      
-      // Mark new solution path
-      solutions[nextSolution].forEach(pos => {
-        if (!updatedMaze.grid[pos.row][pos.col].isStart && 
-            !updatedMaze.grid[pos.row][pos.col].isEnd) {
-          updatedMaze.grid[pos.row][pos.col].type = CellType.SOLUTION;
-        }
-      });
-      
-      setMazeData(updatedMaze);
-      setStats(prev => ({
-        ...prev,
-        pathLength: solutions[nextSolution].length
-      }));
-      
-      toast({
-        title: "Solution Changed",
-        description: `Showing solution ${nextSolution + 1} of ${solutions.length}`,
-      });
-    }
   };
 
   const handleStart = () => {
@@ -282,9 +229,6 @@ const MazeExplorer: React.FC = () => {
           onPause={handlePause}
           onReset={handleReset}
           onGenerateNewMaze={generateNewMaze}
-          onCycleSolutions={cycleSolutions}
-          solutionsCount={solutions.length}
-          currentSolution={currentSolution}
         />
       </div>
     </div>
