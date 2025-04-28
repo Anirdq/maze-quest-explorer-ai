@@ -151,6 +151,31 @@ export const generateMaze = (width: number, height: number): MazeData => {
   // Ensure end position is a path
   grid[endPosition.row][endPosition.col].type = CellType.END;
   
+  // Add additional openings to create multiple paths
+  const additionalPaths = Math.floor(width * height * 0.05); // Adding ~5% more openings
+  
+  for (let i = 0; i < additionalPaths; i++) {
+    // Select a random wall
+    let row = Math.floor(Math.random() * (height - 2)) + 1;
+    let col = Math.floor(Math.random() * (width - 2)) + 1;
+    
+    // Check if it's a wall and has path neighbors on opposite sides
+    // This ensures we're creating useful connections between existing paths
+    if (grid[row][col].type === CellType.WALL) {
+      const hasHorizontalPathNeighbors = 
+        (isValidPosition(grid, {row, col: col-1}) && grid[row][col-1].type === CellType.PATH) &&
+        (isValidPosition(grid, {row, col: col+1}) && grid[row][col+1].type === CellType.PATH);
+      
+      const hasVerticalPathNeighbors = 
+        (isValidPosition(grid, {row: row-1, col}) && grid[row-1][col].type === CellType.PATH) &&
+        (isValidPosition(grid, {row: row+1, col}) && grid[row+1][col].type === CellType.PATH);
+      
+      if (hasHorizontalPathNeighbors || hasVerticalPathNeighbors) {
+        grid[row][col].type = CellType.PATH;
+      }
+    }
+  }
+  
   return mazeData;
 };
 
