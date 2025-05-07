@@ -1,5 +1,6 @@
+
 import React from "react";
-import { CellType, MazeData } from "@/utils/maze";
+import { CellType, MazeData } from "@/utils/mazeUtils";
 
 interface MazeGridProps {
   mazeData: MazeData;
