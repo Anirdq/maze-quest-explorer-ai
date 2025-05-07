@@ -79,7 +79,12 @@ export const createEmptyMaze = (width: number, height: number): MazeData => {
   };
 };
 
+<<<<<<< HEAD
+
+// Generate a maze using recursive backtracking algorithm
+=======
 // Generate a maze using recursive backtracking algorithm with multiple paths
+>>>>>>> main
 export const generateMaze = (width: number, height: number): MazeData => {
   // Initialize with all walls
   const mazeData = createEmptyMaze(width, height);
