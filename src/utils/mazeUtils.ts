@@ -89,7 +89,34 @@ export const createEmptyMaze = (width: number, height: number): MazeData => {
 export const generateMaze = (width: number, height: number): MazeData => {
   // Initialize with all walls
   const mazeData = createEmptyMaze(width, height);
-  const { grid, startPosition, endPosition } = mazeData;
+  const { grid, startPosition } = mazeData;
+  
+  // Define potential end positions (one of the corners, but not where the start is)
+  const potentialEndPositions = [
+    { row: 0, col: width - 1 },           // top-right
+    { row: height - 1, col: 0 },          // bottom-left
+    { row: height - 1, col: width - 1 },  // bottom-right
+  ];
+  
+  // Remove the start position if it's one of these corners
+  const filteredPositions = potentialEndPositions.filter(
+    pos => !(pos.row === startPosition.row && pos.col === startPosition.col)
+  );
+  
+  // Choose one of the remaining corners as the end position
+  const endPosition = filteredPositions[Math.floor(Math.random() * filteredPositions.length)];
+  
+  // Set the end cell
+  grid[endPosition.row][endPosition.col] = {
+    type: CellType.END,
+    position: endPosition,
+    visited: false,
+    isStart: false,
+    isEnd: true,
+  };
+  
+  // Update the end position in the maze data
+  mazeData.endPosition = endPosition;
   
   // Helper function to get unvisited neighbors
   const getUnvisitedNeighbors = (position: Position): Position[] => {
@@ -210,6 +237,35 @@ export const generateMaze = (width: number, height: number): MazeData => {
         }
       }
     }
+  }
+  
+  // Now, make sure there's a path adjacent to the end point
+  const adjacentDirections = [
+    { row: endRow - 1, col: endCol },  // Up
+    { row: endRow, col: endCol + 1 },  // Right
+    { row: endRow + 1, col: endCol },  // Down
+    { row: endRow, col: endCol - 1 },  // Left
+  ];
+  
+  // Find valid adjacent cells (within grid bounds)
+  const validAdjacents = adjacentDirections.filter(
+    dir => dir.row >= 0 && dir.row < height && dir.col >= 0 && dir.col < width
+  );
+  
+  // Ensure at least one adjacent cell is a path
+  let hasAdjacentPath = false;
+  for (const adjacent of validAdjacents) {
+    if (grid[adjacent.row][adjacent.col].type === CellType.PATH) {
+      hasAdjacentPath = true;
+      break;
+    }
+  }
+  
+  // If no adjacent path exists, create one
+  if (!hasAdjacentPath && validAdjacents.length > 0) {
+    // Choose a random adjacent cell and make it a path
+    const randomAdjacent = validAdjacents[Math.floor(Math.random() * validAdjacents.length)];
+    grid[randomAdjacent.row][randomAdjacent.col].type = CellType.PATH;
   }
   
   // Ensure there's a valid path
