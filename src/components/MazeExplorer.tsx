@@ -1,7 +1,15 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import MazeGrid from "./MazeGrid";
 import ControlPanel from "./ControlPanel";
-import { generateMaze, resetMazeVisitation, MazeData, cloneMazeData, ensurePathExists, CellType } from "@/utils/mazeUtils";
+import { 
+  MazeData, 
+  CellType, 
+  resetMazeVisitation, 
+  cloneMazeData, 
+  generateMaze, 
+  ensurePathExists 
+} from "@/utils/maze";
 import { 
   Algorithm, 
   AlgorithmGenerator,

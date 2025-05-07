@@ -1,4 +1,12 @@
-import { Cell, CellType, MazeData, Position, isValidPosition, manhattanDistance, findMultiplePaths } from "./mazeUtils";
+import { 
+  Cell, 
+  CellType, 
+  MazeData, 
+  Position, 
+  isValidPosition, 
+  manhattanDistance, 
+  findMultiplePaths 
+} from "./maze";
 
 export type Algorithm = "bfs" | "dfs" | "astar" | "dijkstra";
 
