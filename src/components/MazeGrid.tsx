@@ -32,6 +32,7 @@ const MazeGrid: React.FC<MazeGridProps> = ({ mazeData }) => {
                 ${cell.type === CellType.VISITED ? 'bg-blue-100' : ''}
                 ${cell.type === CellType.VISITING ? 'bg-purple-100' : ''}
                 ${cell.type === CellType.SOLUTION ? 'bg-yellow-200' : ''}
+                ${cell.type === CellType.ALTERNATE_PATH ? 'bg-green-200' : ''}
                 transition-colors duration-100
               `}
               title={`${rowIndex}, ${colIndex} - ${cell.type}`}
@@ -54,6 +55,11 @@ const MazeGrid: React.FC<MazeGridProps> = ({ mazeData }) => {
               {cell.type === CellType.SOLUTION && !cell.isStart && !cell.isEnd && (
                 <div className="flex h-full w-full items-center justify-center">
                   <div className="h-2 w-2 rounded-full bg-yellow-500"></div>
+                </div>
+              )}
+              {cell.type === CellType.ALTERNATE_PATH && !cell.isStart && !cell.isEnd && (
+                <div className="flex h-full w-full items-center justify-center">
+                  <div className="h-2 w-2 rounded-full bg-green-500"></div>
                 </div>
               )}
             </div>

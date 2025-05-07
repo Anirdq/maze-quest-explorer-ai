@@ -1,8 +1,8 @@
-# Welcome to your Lovable project
+# Welcome to your Maze AI project
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/5ea719f4-6415-4185-9ff1-d7de6a2c9c15
+**URL**: https://maze-quest-explorer-ai.vercel.app/
 
 ## How can I edit this code?
 

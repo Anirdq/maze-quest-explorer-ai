@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import MazeGrid from "./MazeGrid";
 import ControlPanel from "./ControlPanel";
-import { generateMaze, resetMazeVisitation, MazeData, cloneMazeData, ensurePathExists } from "@/utils/mazeUtils";
+import { generateMaze, resetMazeVisitation, MazeData, cloneMazeData, ensurePathExists, CellType } from "@/utils/mazeUtils";
 import { 
   Algorithm, 
   AlgorithmGenerator,
@@ -61,7 +61,7 @@ const MazeExplorer: React.FC = () => {
     
     toast({
       title: "New Maze Generated",
-      description: `Created a ${mazeSize}×${mazeSize} maze with guaranteed solution`,
+      description: `Created a ${mazeSize}×${mazeSize} maze with multiple possible solutions`,
     });
   };
 
@@ -120,6 +120,10 @@ const MazeExplorer: React.FC = () => {
       handleReset();
     } else if (isDone) {
       handleReset();
+      toast({
+        title: "Algorithm Changed",
+        description: "Try running again - different algorithms may find different paths!",
+      });
     }
   };
 
