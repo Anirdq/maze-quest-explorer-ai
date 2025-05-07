@@ -55,11 +55,10 @@ export const createEmptyMaze = (width: number, height: number): MazeData => {
     grid.push(currentRow);
   }
 
-  // Default start and end positions
+  // Default start position
   const startPosition = { row: 0, col: 0 };
-  const endPosition = { row: height - 1, col: width - 1 };
-
-  // Set start and end cells
+  
+  // Set start cell
   grid[startPosition.row][startPosition.col] = {
     type: CellType.START,
     position: startPosition,
@@ -68,13 +67,8 @@ export const createEmptyMaze = (width: number, height: number): MazeData => {
     isEnd: false,
   };
 
-  grid[endPosition.row][endPosition.col] = {
-    type: CellType.END,
-    position: endPosition,
-    visited: false,
-    isStart: false,
-    isEnd: true,
-  };
+  // Initialize with a temporary end position - this will be replaced
+  const endPosition = { row: height - 1, col: width - 1 };
 
   return {
     grid,
