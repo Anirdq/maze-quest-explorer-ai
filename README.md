@@ -1,60 +1,66 @@
-[# Welcome to your Maze AI project
+# 🧠 Maze Quest Explorer AI
 
-## Project info
+> An interactive, AI-powered maze-solving and generation web app built with modern web technologies.
 
-**URL**: https://maze-quest-explorer-ai.vercel.app/
+![Maze Quest Explorer Banner](https://your-image-link-if-any.com/banner.png)
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 🚀 About the Project
 
+**Maze Quest Explorer AI** is a smart, intuitive platform that combines artificial intelligence and algorithmic logic to **generate**, **visualize**, and **solve mazes** dynamically. Whether you’re a puzzle lover, student, or educator, this web app provides both **entertainment** and **educational value**, showcasing how pathfinding algorithms like **DFS**, **BFS**, **A\***, and **Dijkstra** work in real-time.
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## ✨ Features
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- 🧱 Random maze generation with adjustable dimensions  
+- 🔍 Multiple AI solving algorithms (DFS, BFS, A*, Dijkstra)  
+- 🎮 Interactive visualization and step-by-step path tracing  
+- 🔁 Customizable start and end points  
+- ⚙️ Lightweight, responsive, and mobile-friendly UI  
+- 💡 Educational tool for algorithm learning and debugging  
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 🛠️ Tech Stack
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+| Layer         | Tools / Frameworks                |
+| ------------- | ---------------------------------- |
+| Frontend      | **React**, **TailwindCSS**, **TypeScript** |
+| Animation     | **Framer Motion** or CSS Transitions |
+| Algorithms    | DFS, BFS, Dijkstra, A* (JavaScript) |
+| Hosting       | **Vercel**                         |
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+## 🧪 Maze Algorithms Used
+
+- `DFS (Depth-First Search)`
+- `BFS (Breadth-First Search)`
+- `Dijkstra’s Algorithm`
+- `A* (A-Star) Search`
+
+Each one visualized interactively to enhance user understanding of algorithm behavior.
+
+---
+
+## 🖥️ Local Development
+
+```bash
+# Clone the repository
+git clone https://github.com/your-username/maze-quest-explorer-ai.git
+cd maze-quest-explorer-ai
+
+# Install dependencies
+npm install
+
+# Run in development
 npm run dev
-```
 
-**Edit a file directly in GitHub**
+# Build for production
+npm run build
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-](https://maze-quest-explorer-ai.vercel.app/)
 terminal run
 
 git status
