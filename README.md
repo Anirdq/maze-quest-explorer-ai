@@ -1,4 +1,4 @@
-# Welcome to your Maze AI project
+[# Welcome to your Maze AI project
 
 ## Project info
 
@@ -54,7 +54,7 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
-
+](https://maze-quest-explorer-ai.vercel.app/)
 terminal run
 
 git status
